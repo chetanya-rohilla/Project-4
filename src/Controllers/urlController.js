@@ -1,18 +1,14 @@
 const validUrl = require('valid-url')
 const shortid = require('shortid')
+const Url= require('../Models/urlModel')
+
+const baseUrl = 'http:localhost:3000'
 
 
 const shortenUrl = async function(req,res){
-const {
-    longUrl
-} = req.body // destructure the longUrl from req.body.longUrl
+const {longUrl} = req.body // destructure the longUrl from req.body.longUrl
 
-// check base url if valid using the validUrl.isUri method
-if (!validUrl.isUri(baseUrl)) {
-    return res.status(401).json('Invalid base URL')
-}
-
-// if valid, we create the url code
+// we create the url code
 const urlCode = shortid.generate()
 
 // check long url if valid using the validUrl.isUri method
@@ -24,11 +20,11 @@ if (validUrl.isUri(longUrl)) {
         */
         let url = await Url.findOne({
             longUrl
-        })
+        }).select({_id:0,__v:0})
 
         // url exist and return the respose
         if (url) {
-            res.json(url)
+             res.status(200).send(url)
         } else {
             // join the generated short code the the base url
             const shortUrl = baseUrl + '/' + urlCode
@@ -38,19 +34,47 @@ if (validUrl.isUri(longUrl)) {
                 longUrl,
                 shortUrl,
                 urlCode,
-                date: new Date()
-            })
+           })
             await url.save()
-            res.json(url)
+            let data ={
+                longUrl : url.longUrl,
+                shortUrl: url.shortUrl,
+                urlCode:url.urlCode
+            }
+            
+            res.status(200).send({status:true,data:data})
         }
     }
     // exception handler
     catch (err) {
         console.log(err)
-        res.status(500).json('Server Error')
+        res.status(500).send({status:false,message:err.message})
     }
 } else {
-    res.status(401).json('Invalid longUrl')
+    res.status(400).send({status:false,message :"invalid longUrl"})
 }}
 
-module.exports={shortenUrl}
+
+const getUrlCode = async function(req,res){
+    try {
+        // find a document match to the code in req.params.code
+        const url = await Url.findOne({
+            urlCode: req.params.urlCode
+        })
+        if (url) {
+            
+            return res.status(200).send({status:true,URL:url.longUrl})
+        } else {
+            // else return a not found 404 status
+            return res.status(404).send({status:false,message:'No URL Found'})
+        }
+
+    }
+    // exception handler
+    catch (err) {
+        console.error(err)
+        res.status(500).send({status:false,message:err.message})
+    }
+}
+
+module.exports={shortenUrl,getUrlCode}
