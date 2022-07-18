@@ -1,7 +1,6 @@
 {
   "name": "urlshortner",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,5 +13,14 @@
     "mongoose": "^6.4.4",
     "shortid": "^2.2.16",
     "valid-url": "^1.0.9"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mn-pandey/project-urlShortnerGroup55.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mn-pandey/project-urlShortnerGroup55/issues"
+  },
+  "homepage": "https://github.com/mn-pandey/project-urlShortnerGroup55#readme",
+  "description": ""
 }

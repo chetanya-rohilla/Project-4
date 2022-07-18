@@ -1,14 +1,22 @@
 const validUrl = require('valid-url')
 const shortid = require('shortid')
+const { isValid } = require('shortid')
 
-
+const isValidUrl = urlString=> {
+    try { 
+        return Boolean(new URL(urlString)); 
+    }
+    catch(e){ 
+        return false; 
+    }
+}
 const shortenUrl = async function(req,res){
 const {
     longUrl
 } = req.body // destructure the longUrl from req.body.longUrl
-
+const{baseUrl}=req.params
 // check base url if valid using the validUrl.isUri method
-if (!validUrl.isUri(baseUrl)) {
+if (!isValidUrl(baseUrl)) {
     return res.status(401).json('Invalid base URL')
 }
 
