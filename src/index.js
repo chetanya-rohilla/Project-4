@@ -13,6 +13,6 @@ mongoose.connect("mongodb+srv://mn-pandey:9219591303Am%40n@cluster0.mov0c.mongod
 
 app.use('/', route);
 
-const PORT = process.env.PORT || 3000
-// Listen for incoming requests
-app.listen(PORT, () => console.log(`server started, listening PORT ${PORT}`))
+app.listen(process.env.PORT || 3000, function () {
+   console.log('Express app running on port ' + (process.env.PORT || 3000))
+}) 
