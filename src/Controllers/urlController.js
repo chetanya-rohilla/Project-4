@@ -54,7 +54,7 @@ const getUrlCode = async function (req, res) {
             urlCode: req.params.urlCode
         })
         if (url) {
-            return res.status(302).send({ status: true, data: url.longUrl })
+            return res.status(302).redirect(url.longUrl)
         } else {
             return res.status(404).send({ status: false, message: 'No URL Found' })
         }
