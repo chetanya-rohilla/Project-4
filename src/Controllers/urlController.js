@@ -72,13 +72,14 @@ const shortenUrl = async function (req, res) {
 const getUrlCode = async function (req, res) {
     try {
         // find a document match to the code in req.params.code
+        if(!shortid.isValid(req.params.urlCode)  )   return res.status(400).send({ status: false, message: 'Wrong UrlCode' })
         let cachedUrl = await GET_ASYNC(`${req.params.urlCode}`)
         if(cachedUrl)    return res.status(302).redirect(cachedUrl)
         const url = await Url.findOne({
             urlCode: req.params.urlCode
         })
         if (url) {
-            await SET_ASYNC(`${req.params.urlCode}`, JSON.stringify(url.longUrl))
+            await SET_ASYNC(`${req.params.urlCode}`, url.longUrl)
             return res.status(302).redirect(url.longUrl)
         } else {
             return res.status(404).send({ status: false, message: 'No URL Found' })
